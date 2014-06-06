@@ -35,6 +35,7 @@ function LaunchElevated
 
 function DoElevatedOperations
 {
+
 	echo "Creating $((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\"
     New-Item -ItemType Directory -Force -Path "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\" | out-null 
 
@@ -56,12 +57,18 @@ function DoElevatedOperations
 	$location = "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\pageant.exe"
 	(new-object Net.WebClient).DownloadFile($download,$location)
 
+	
+	echo "Creating $((Get-Item "Env:ProgramFiles(x86)").Value)\PSbins\"
+	New-Item -ItemType Directory -Force -Path "$((Get-Item "Env:ProgramFiles(x86)").Value)\PSbins\" | out-null 
 }
 
 function DoStandardOperations
 {
 	LaunchElevated
 
+	echo "Creating C:\Users\$env:username\Documents\WindowsPowerShell\"
+	New-Item -ItemType Directory -Force -Path "C:\Users\$env:username\Documents\WindowsPowerShell\"
+	
     # Add Plink to GIT_SSH
 	echo "Adding Plink to GIT_SSH"
 	$bingit = "`r`n"+'$env:GIT_SSH=(Get-Item "Env:ProgramFiles(x86)").Value + "\Putty\plink.exe"'
@@ -77,8 +84,6 @@ function DoStandardOperations
 	# Start Page Ant
 	echo "Running pageant to load key"
 	start "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\pageant.exe" $RSA
-	
-	start "C:\Users\$env:username\Documents\WindowsPowerShell\Microsoft.Powershell_profile.ps1"
   
 }
 

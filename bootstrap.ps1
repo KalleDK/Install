@@ -9,3 +9,6 @@ $putty = Start-Process "$PsHome\PowerShell.exe" $location
 	Start-Sleep -Seconds 2
 }
 Remove-Item $location
+
+(new-object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex
+install-module posh-git
