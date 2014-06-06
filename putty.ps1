@@ -85,6 +85,8 @@ function DoStandardOperations
 	echo "Running pageant to load key"
 	start "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\pageant.exe" $RSA
   
+	(new-object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex
+	install-module posh-git
 }
 
 
