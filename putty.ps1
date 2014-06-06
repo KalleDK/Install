@@ -60,6 +60,9 @@ function DoElevatedOperations
 	
 	echo "Creating $((Get-Item "Env:ProgramFiles(x86)").Value)\PSbins\"
 	New-Item -ItemType Directory -Force -Path "$((Get-Item "Env:ProgramFiles(x86)").Value)\PSbins\" | out-null 
+	cmd /c mklink "$((Get-Item "Env:ProgramFiles(x86)").Value)\PSbins\putty.exe" "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\putty.exe"
+	cmd /c mklink "$((Get-Item "Env:ProgramFiles(x86)").Value)\PSbins\plink.exe" "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\plink.exe"
+	cmd /c mklink "$((Get-Item "Env:ProgramFiles(x86)").Value)\PSbins\pageant.exe" "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\pageant.exe"
 }
 
 function DoStandardOperations
