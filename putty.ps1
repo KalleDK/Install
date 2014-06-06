@@ -35,19 +35,23 @@ function LaunchElevated
 
 function DoElevatedOperations
 {
-    New-Item -ItemType Directory -Force -Path "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\"
+	echo "Creating $((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\"
+    New-Item -ItemType Directory -Force -Path "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\" | out-null 
 
 	# Download Putty
+	echo "Downloading Putty"
 	$download = "http://the.earth.li/~sgtatham/putty/latest/x86/putty.exe"
 	$location = "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\putty.exe"
 	(new-object Net.WebClient).DownloadFile($download,$location)
 
 	# Download Plink
+	echo "Downloading Plink"
 	$download = "http://the.earth.li/~sgtatham/putty/latest/x86/plink.exe"
 	$location = "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\plink.exe"
 	(new-object Net.WebClient).DownloadFile($download,$location)
 
 	# Download Pageant
+	echo "Downloading Pageant"
 	$download = "http://the.earth.li/~sgtatham/putty/latest/x86/pageant.exe"
 	$location = "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\pageant.exe"
 	(new-object Net.WebClient).DownloadFile($download,$location)
@@ -59,20 +63,19 @@ function DoStandardOperations
 	LaunchElevated
 
     # Add Plink to GIT_SSH
+	echo "Adding Plink to GIT_SSH"
 	$bingit = "`r`n"+'$env:GIT_SSH=(Get-Item "Env:ProgramFiles(x86)").Value + "\Putty\plink.exe"'
 	echo $bingit | Out-File -encoding ASCII C:\Users\$env:username\Documents\WindowsPowerShell\Microsoft.Powershell_profile.ps1 -Append
 
 	# Start Putty and login to Github
+	echo "Running Putty to cache github key"
 	$PuttyProcess = Start-Process "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\putty.exe" -ArgumentList "git@github.com"
-	while (!($PuttyProcess.HasExited))
-	{
-		Start-Sleep -Seconds 2
-	}
-	
+		
 	# Getting Path to RSA file
 	$RSA = Read-Host 'Path to RSA?'
 
 	# Start Page Ant
+	echo "Running pageant to load key"
 	start "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\pageant.exe" $RSA
 	
 	start "C:\Users\$env:username\Documents\WindowsPowerShell\Microsoft.Powershell_profile.ps1"
