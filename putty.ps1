@@ -37,7 +37,7 @@ function DoElevatedOperations
 {
 
 	echo "Creating $((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\"
-    New-Item -ItemType Directory -Force -Path "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\" | out-null 
+	New-Item -ItemType Directory -Force -Path "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\" | out-null 
 
 	# Download Putty
 	echo "Downloading Putty"
@@ -72,10 +72,10 @@ function DoStandardOperations
 	echo "Creating C:\Users\$env:username\Documents\WindowsPowerShell\"
 	New-Item -ItemType Directory -Force -Path "C:\Users\$env:username\Documents\WindowsPowerShell\"
 	
-    # Add Plink to GIT_SSH
+	# Add Plink to GIT_SSH
 	echo "Adding Plink to GIT_SSH"
-	$bingit = "`r`n"+'$env:GIT_SSH=(Get-Item "Env:ProgramFiles(x86)").Value + "\Putty\plink.exe"'
-	echo $bingit | Out-File -encoding ASCII C:\Users\$env:username\Documents\WindowsPowerShell\Microsoft.Powershell_profile.ps1 -Append
+	$plink_env = "`r`n" + '$env:GIT_SSH=(Get-Item "Env:ProgramFiles(x86)").Value + "\Putty\plink.exe"'
+	echo $plink_env | Out-File -encoding ASCII $PROFILE -Append
 
 	# Start Putty and login to Github
 	echo "Running Putty to cache github key"
@@ -87,9 +87,7 @@ function DoStandardOperations
 	# Start Page Ant
 	echo "Running pageant to load key"
 	start "$((Get-Item "Env:ProgramFiles(x86)").Value)\Putty\pageant.exe" $RSA
-  
-	(new-object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex
-	install-module posh-git
+ 
 }
 
 
